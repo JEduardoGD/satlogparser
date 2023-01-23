@@ -15,7 +15,7 @@ public class FileParserSeriviceImpl implements FileParserSerivice {
     private static final String REGEX_GUION = "^(-)+$";
 
     @Override
-    public List<TableEntityObj> analize(List<String> strings) {
+    public List<TableEntityObj> analize(String filename, List<String> strings) {
         List<TableEntityObj> tableEntityObjList = new ArrayList<>();
         Pattern patternGuion = Pattern.compile(REGEX_GUION);
         for (int i = 0; i < strings.size(); i++) {
@@ -36,6 +36,7 @@ public class FileParserSeriviceImpl implements FileParserSerivice {
                     }
                 }
                 
+                tableEntityObj.setFilename(filename);
                 tableEntityObj.setTableName(tableName);
                 tableEntityObj.setStrings(listStrings);
                 tableEntityObjList.add(tableEntityObj);

@@ -1,7 +1,5 @@
 package egd.sat.logparser.exceptions;
 
-import java.io.IOException;
-
 public class FileValidationServiceException extends Exception {
 
     /**
@@ -13,7 +11,7 @@ public class FileValidationServiceException extends Exception {
         super(s);
     }
 
-    public FileValidationServiceException(IOException e) {
+    public FileValidationServiceException(Exception e) {
         super(e);
     }
 

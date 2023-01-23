@@ -6,7 +6,7 @@ import egd.sat.logparser.entity.TableEntityObj;
 
 public interface FileParserSerivice {
 
-    List<TableEntityObj> analize(List<String> strings);
+    List<TableEntityObj> analize(String filename, List<String> strings);
 
 
 }
