@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -28,7 +27,6 @@ import egd.sat.logparser.util.ParserUtil;
 public class TableDataObjListParserServiceImpl implements TableDataObjListParserService {
     int k;
 
-
     @Override
     public void generateHojaCalculo(List<TableDataObj> tableDataObjList) throws FileValidationServiceException {
         List<String> listTableNames = tableDataObjList.stream().map(TableDataObj::getTableName).distinct()
@@ -38,7 +36,7 @@ public class TableDataObjListParserServiceImpl implements TableDataObjListParser
         XSSFRow rowHeader = null;
 
         String filename = null;
-        
+
         CreationHelper createHelper = workbook.getCreationHelper();
         XSSFCellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy HH:mm:ss"));
