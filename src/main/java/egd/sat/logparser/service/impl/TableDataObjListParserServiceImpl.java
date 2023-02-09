@@ -32,7 +32,8 @@ public class TableDataObjListParserServiceImpl implements TableDataObjListParser
         List<String> listTableNames = tableDataObjList.stream().map(TableDataObj::getTableName).distinct()
                 .collect(Collectors.toList());
 
-        XSSFWorkbook workbook = new XSSFWorkbook();
+        @SuppressWarnings("resource")
+		XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFRow rowHeader = null;
 
         String filename = null;
@@ -46,6 +47,7 @@ public class TableDataObjListParserServiceImpl implements TableDataObjListParser
                     .filter(p -> p.getTableName().equals(tableName)).collect(Collectors.toList());
 
             XSSFSheet sheet = workbook.createSheet(tableName);
+			XSSFCell firstCell, lastCell;
 
             // getting all rows
             List<Integer> allRows = objectsOfTable.stream().map(p -> p.getRowNum()).distinct().sorted()
@@ -60,13 +62,22 @@ public class TableDataObjListParserServiceImpl implements TableDataObjListParser
 
                 Integer maxCol = actualRow.stream().map(TableDataObj::getColCount).max(Integer::compare).get();
 
-                for (k = 0; k < maxCol; k++) {
+				for (k = 0; k <= maxCol; k++) {
                     TableDataObj actualObj = actualRow.stream().filter(p -> p.getColCount() == k).findFirst().get();
                     if (rowIterator == 0) {
                         XSSFCell cellHeader = rowHeader.createCell(k);
                         cellHeader.setCellValue(actualObj.getColumnName());
                     }
-                    XSSFCell cell = row.createCell(k);
+					XSSFCell cell = row.createCell(k);
+					
+					if (rowIterator == 0 && k == 0) {
+						firstCell = cell;
+					}
+					if (rowIterator == allRows.get(allRows.size() - 1) && k == maxCol) {
+						lastCell = cell;
+					}
+					
+					
                     if (ParserUtil.isBigDecimalParseable(actualObj.getColumnValue())) {
                         cell.setCellType(CellType.NUMERIC);
                         cell.setCellValue(ParserUtil.parseBigDecimal(actualObj.getColumnValue()).doubleValue());
@@ -84,6 +95,7 @@ public class TableDataObjListParserServiceImpl implements TableDataObjListParser
                 }
 
             }
+            //sheet.setAutoFilter(new CellRangeAddress(firstCell.getRow(), lastCell.getRow(), firstCell.getCol(), lastCell.getCol()));
         }
 
         File f = Paths.get(filename).toFile();

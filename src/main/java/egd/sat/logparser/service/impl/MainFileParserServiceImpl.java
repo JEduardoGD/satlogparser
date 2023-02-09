@@ -1,13 +1,13 @@
 package egd.sat.logparser.service.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,13 +42,12 @@ public class MainFileParserServiceImpl implements MainFileParserService {
             logFile = fileValidationService.validate(strings[0]);
         }
 
-        String unaLinea;
-        try {
-            unaLinea = FileUtils.readFileToString(logFile, StandardCharsets.UTF_8);
-            lineas = Arrays.asList(unaLinea.split("\n"));
-        } catch (IOException e) {
-            throw new FileValidationServiceException(e);
-        }
+		try {
+			ArrayList<String> arrayList = this.fileToArrayList(logFile);
+			lineas = (List<String>) arrayList;
+		} catch (IOException e) {
+			throw new FileValidationServiceException(e);
+		}
 
         List<TableEntityObj> tableEntityObjList = fileParserSerivice.analize(logFile.getName() + ".xlsx", lineas);
 
@@ -57,4 +56,15 @@ public class MainFileParserServiceImpl implements MainFileParserService {
         }
         tableDataObjListParserService.generateHojaCalculo(tableDataObjList);
     }
+    
+	private ArrayList<String> fileToArrayList(File file) throws FileNotFoundException, IOException {
+		ArrayList<String> arr = new ArrayList<String>();
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			String sCurrentLine;
+			while ((sCurrentLine = br.readLine()) != null) {
+				arr.add(sCurrentLine.trim());
+			}
+		}
+		return arr;
+	}
 }

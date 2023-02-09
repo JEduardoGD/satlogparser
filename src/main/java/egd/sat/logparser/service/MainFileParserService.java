@@ -4,5 +4,5 @@ import egd.sat.logparser.exceptions.FileValidationServiceException;
 
 public interface MainFileParserService {
 
-    void parse(String[] strings) throws FileValidationServiceException;
+    void parse(String... strings) throws FileValidationServiceException;
 }
