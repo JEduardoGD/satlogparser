@@ -1,5 +1,6 @@
 package egd.sat.logparser.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,7 +16,7 @@ public class FileParserSeriviceImpl implements FileParserSerivice {
     private static final String REGEX_GUION = "^(-)+$";
 
     @Override
-    public List<TableEntityObj> analize(String filename, List<String> strings) {
+    public List<TableEntityObj> analize(File parentPath, String filename, List<String> strings) {
         List<TableEntityObj> tableEntityObjList = new ArrayList<>();
         Pattern patternGuion = Pattern.compile(REGEX_GUION);
         for (int i = 0; i < strings.size(); i++) {
@@ -36,9 +37,10 @@ public class FileParserSeriviceImpl implements FileParserSerivice {
                     }
                 }
                 
-                tableEntityObj.setFilename(filename);
+                tableEntityObj.setFilename(filename + ".xlsx");
                 tableEntityObj.setTableName(tableName);
                 tableEntityObj.setStrings(listStrings);
+                tableEntityObj.setRoute(parentPath);
                 tableEntityObjList.add(tableEntityObj);
             }
         }

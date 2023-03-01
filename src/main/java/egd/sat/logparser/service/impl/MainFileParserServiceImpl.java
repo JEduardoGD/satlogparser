@@ -49,7 +49,7 @@ public class MainFileParserServiceImpl implements MainFileParserService {
 			throw new FileValidationServiceException(e);
 		}
 
-        List<TableEntityObj> tableEntityObjList = fileParserSerivice.analize(logFile.getName() + ".xlsx", lineas);
+        List<TableEntityObj> tableEntityObjList = fileParserSerivice.analize(logFile.getParentFile(), logFile.getName(), lineas);
 
         for (TableEntityObj tableEntityObj : tableEntityObjList) {
             tableDataObjList.addAll(entityObjectParserService.parseEntityObject(tableEntityObj));

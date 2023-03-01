@@ -37,6 +37,7 @@ public class TableDataObjListParserServiceImpl implements TableDataObjListParser
         XSSFRow rowHeader = null;
 
         String filename = null;
+        File parentPath = null;
 
         CreationHelper createHelper = workbook.getCreationHelper();
         XSSFCellStyle cellStyle = workbook.createCellStyle();
@@ -91,14 +92,15 @@ public class TableDataObjListParserServiceImpl implements TableDataObjListParser
                     } else {
                         cell.setCellValue(actualObj.getColumnValue());
                     }
-                    filename = actualObj.getFilenName();
+                    filename = actualObj.getFileName();
+                    parentPath = actualObj.getParentPath();
                 }
 
             }
             //sheet.setAutoFilter(new CellRangeAddress(firstCell.getRow(), lastCell.getRow(), firstCell.getCol(), lastCell.getCol()));
         }
 
-        File f = Paths.get(filename).toFile();
+		File f = Paths.get(parentPath.getAbsolutePath() + File.separator + filename).toFile();
         if (f.exists() && !f.canWrite()) {
             try {
                 workbook.close();

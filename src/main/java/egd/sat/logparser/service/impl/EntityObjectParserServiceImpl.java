@@ -63,7 +63,8 @@ public class EntityObjectParserServiceImpl implements EntityObjectParserService 
                 tableDataObj.setTableName(tableName);
                 tableDataObj.setColumnValue(columnValue);
                 tableDataObj.setColCount(i);
-                tableDataObj.setFilenName(tableEntityObj.getFilename());
+                tableDataObj.setFileName(tableEntityObj.getFilename());
+                tableDataObj.setParentPath(tableEntityObj.getRoute());
                 tableDataObjList.add(tableDataObj);
             }
             rowNum++;

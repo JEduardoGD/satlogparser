@@ -1,22 +1,25 @@
 package egd.sat.logparser.entity;
 
+import java.io.File;
+
 public class TableDataObj {
     private int rowNum;
-    private String filenName;
+    private String fileName;
     private String tableName;
     private String columnName;
     private String columnValue;
     private int colCount;
+    private File parentPath;
+    
+    public String getFileName() {
+		return fileName;
+	}
 
-    public String getFilenName() {
-        return filenName;
-    }
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 
-    public void setFilenName(String filenName) {
-        this.filenName = filenName;
-    }
-
-    public int getRowNum() {
+	public int getRowNum() {
         return rowNum;
     }
 
@@ -56,4 +59,12 @@ public class TableDataObj {
         this.colCount = colCount;
     }
 
+	public File getParentPath() {
+		return parentPath;
+	}
+
+	public void setParentPath(File parentPath) {
+		this.parentPath = parentPath;
+	}
+    
 }

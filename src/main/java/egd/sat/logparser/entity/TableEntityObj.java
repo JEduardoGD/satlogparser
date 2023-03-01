@@ -1,11 +1,13 @@
 package egd.sat.logparser.entity;
 
+import java.io.File;
 import java.util.List;
 
 public class TableEntityObj {
     private String filename;
     private String tableName;
     private List<String> strings;
+    private File route;
 
     public String getFilename() {
         return filename;
@@ -30,5 +32,13 @@ public class TableEntityObj {
     public void setStrings(List<String> strings) {
         this.strings = strings;
     }
+
+	public File getRoute() {
+		return route;
+	}
+
+	public void setRoute(File route) {
+		this.route = route;
+	}
 
 }
