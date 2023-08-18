@@ -1,22 +1,24 @@
 package egd.sat.logparser.service.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.Resources;
 import org.springframework.stereotype.Service;
 
 import egd.sat.logparser.entity.TableDataObj;
 import egd.sat.logparser.entity.TableEntityObj;
 import egd.sat.logparser.exceptions.FileValidationServiceException;
 import egd.sat.logparser.service.EntityObjectParserService;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class EntityObjectParserServiceImpl implements EntityObjectParserService {
     private static final String COLUMN_NAMES_PATH = "column_names";
 
@@ -34,18 +36,35 @@ public class EntityObjectParserServiceImpl implements EntityObjectParserService 
             fileColumns = null;
         }
 
-        if (fileColumns != null) {
-            Path fileColumnsPath = Paths.get(COLUMN_NAMES_PATH + File.separator + fileColumns);
-            try {
-                File fileColumnsFile = fileColumnsPath.toFile();
-                if (fileColumnsFile.exists() && fileColumnsFile.canRead()) {
-                    columnNames = Files.readAllLines(Paths.get(fileColumnsFile.getPath()), StandardCharsets.UTF_8);
-                }
-
-            } catch (IOException e) {
-                throw new FileValidationServiceException(e);
-            }
-        }
+		if (fileColumns != null) {
+			InputStream inputStream = null;
+			BufferedReader reader = null;
+			try {
+				columnNames = new ArrayList<>();
+				inputStream = Resources.getInputStream(COLUMN_NAMES_PATH + File.separator + fileColumns);
+				reader = new BufferedReader(new InputStreamReader(inputStream));
+				while (reader.ready()) {
+					columnNames.add(reader.readLine());
+				}
+			} catch (IOException  e1) {
+				throw new FileValidationServiceException(e1);
+			}catch (IllegalArgumentException e1) {
+				log.error("No existe el archivo de nombres de columnas {}", COLUMN_NAMES_PATH + File.separator + fileColumns);
+			} finally {
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (IOException e) {
+					}
+				}
+				if (inputStream != null) {
+					try {
+						inputStream.close();
+					} catch (IOException e) {
+					}
+				}
+			}
+		}
 
         int rowNum = 0;
         for (String s : tableEntityObj.getStrings()) {

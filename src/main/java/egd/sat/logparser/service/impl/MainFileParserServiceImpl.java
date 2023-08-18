@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egd.sat.logparser.entity.AnalisisPagoDao;
 import egd.sat.logparser.entity.TableDataObj;
 import egd.sat.logparser.entity.TableEntityObj;
 import egd.sat.logparser.exceptions.FileValidationServiceException;
@@ -18,15 +19,19 @@ import egd.sat.logparser.service.EntityObjectParserService;
 import egd.sat.logparser.service.FileParserSerivice;
 import egd.sat.logparser.service.FileValidationService;
 import egd.sat.logparser.service.MainFileParserService;
+import egd.sat.logparser.service.PagosParser;
 import egd.sat.logparser.service.TableDataObjListParserService;
 
 @Service
 public class MainFileParserServiceImpl implements MainFileParserService {
+	
+	private static final String PAGO = "PAGO";
 
     @Autowired FileValidationService fileValidationService;
     @Autowired  FileParserSerivice fileParserSerivice;
     @Autowired EntityObjectParserService entityObjectParserService;
     @Autowired TableDataObjListParserService tableDataObjListParserService;
+    @Autowired PagosParser pagosParser;
 
     @Override
     public void parse(String... strings) throws FileValidationServiceException {
@@ -50,11 +55,15 @@ public class MainFileParserServiceImpl implements MainFileParserService {
 		}
 
         List<TableEntityObj> tableEntityObjList = fileParserSerivice.analize(logFile.getParentFile(), logFile.getName(), lineas);
+        AnalisisPagoDao analisisPago = null;
 
         for (TableEntityObj tableEntityObj : tableEntityObjList) {
             tableDataObjList.addAll(entityObjectParserService.parseEntityObject(tableEntityObj));
+            if(PAGO.equals(tableEntityObj.getTableName())) {
+            	analisisPago = pagosParser.parse(tableEntityObj);
+            }
         }
-        tableDataObjListParserService.generateHojaCalculo(tableDataObjList);
+        tableDataObjListParserService.generateHojaCalculo(tableDataObjList, analisisPago);
     }
     
 	private ArrayList<String> fileToArrayList(File file) throws FileNotFoundException, IOException {

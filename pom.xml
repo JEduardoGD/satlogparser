@@ -52,6 +52,13 @@
 			<version>2.11.0</version>
 		</dependency>
 
+		<!-- loombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.28</version><!--$NO-MVN-MAN-VER$-->
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
